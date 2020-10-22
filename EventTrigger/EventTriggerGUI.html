@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html style="padding:20px">
+
+<head>
+  <meta charset="utf-8">
+  <title>Event Trigger</title>
+  <script type="text/javascript">
+    document.write('<link rel="import" href="' + window.Alteryx.LibDir + '2/lib/includes.html">');
+  </script>
+  <style>
+    body {
+      margin: 15px;
+    }
+
+    .header-ruler {
+      background-color: #cccccc;
+      height: 1px;
+      border: 0 none;
+      flex-grow: 1;
+      margin-top: 0.625em;
+      margin-left: 10px;
+    }
+
+    .header-message {
+      color: #52617f;
+      font-size: 1.78em;
+      font-weight: normal;
+      padding-bottom: 0px;
+      margin: 0px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    h2 {
+      padding: 10px 0 5px 0;
+      margin: 15px 5px 5px 0;
+      font-size: 1.556em;
+      font-weight: normal;
+      color: #52617f;
+    }
+
+    h3 {
+      color: #8698ba;
+      font-size: 1.167em;
+      margin: 6px 0px 3px 0;
+      padding: 0;
+      font-weight: normal;
+      line-height: 1.42857143;
+    }
+
+    label {
+      color: #8698ba;
+      font-size: 1.167em;
+      margin: 6px 0px 3px 0;
+      padding: 0;
+      font-weight: normal;
+      line-height: 1.42857143;
+    }
+
+    fieldset {
+      border: none;
+    }
+
+    section,
+    select,
+    checkbox,
+    ayx {
+      padding: 10px 0 10px 0;
+    }
+  </style>
+
+<body>
+  <div class="header-message">
+    <div>XMSG("Event Trigger")</div>
+    <hr class="header-ruler">
+    </hr>
+  </div>
+  <form>
+    <fieldset>
+      <section>
+        <h2>XMSG("Monitor a folder or a file for events?")</h2>
+        <ayx data-ui-props='{type:"RadioGroup", widgetId:"EventType"}'></ayx>
+      </section>
+
+      <section id='folder'>
+        <label>XMSG("Monitored folder:")</label>
+        <ayx data-ui-props='{type:"FileBrowse", widgetId:"folder", browseType:"Folder"}'
+          data-item-props="{dataName:'monitor_dir'}"></ayx>
+
+        <label>XMSG("Matching file specification:")</label>
+        <ayx data-ui-props='{type:"TextBox", widgetId:"FileName", placeholder:"*.*"}'
+          data-item-props="{dataName:'filespec'}"></ayx>
+      </section>
+
+      <section id='file'>
+        <label>XMSG("Monitored file:")</label>
+        <ayx data-ui-props='{type:"FileBrowse", widgetId:"file", browseType:"File"}'
+          data-item-props="{dataName:'monitor_file'}"></ayx>
+      </section>
+
+      <section>
+        <h2>XMSG("Which events do you wish to monitor?")</h2>
+        <ayx data-ui-props='{type:"CheckBox", widgetId:"CheckCreate", label:"XMSG("Additions")"}'
+          data-item-props="{dataName:'additions'}"></ayx>
+        <ayx data-ui-props='{type:"CheckBox", widgetId:"CheckDelete", label:"XMSG("Deletions")"}'
+          data-item-props="{dataName:'deletions'}"></ayx>
+        <ayx data-ui-props='{type:"CheckBox", widgetId:"CheckChange", label:"XMSG("Changes")"}'
+          data-item-props="{dataName:'changes'}"></ayx>
+      </section>
+      <section>
+        <label for='Timeout'>XMSG("Timeout in seconds")</label>
+        <ayx data-ui-props='{type:"NumericSpinner", widgetId:"Timeout"}'></ayx>
+      </section>
+    </fieldset>
+  </form>
+
+</body>
+<script type="text/javascript">
+
+  const hide_options = () => {
+    if (Alteryx.Gui.Manager.getDataItem('event_type').getValue() == 'event_folder') {
+      document.getElementById('folder').style.display = 'block'
+      document.getElementById('file').style.display = 'none'
+    }
+    else {
+      document.getElementById('folder').style.display = 'none'
+      document.getElementById('file').style.display = 'block'
+    }
+
+  }
+
+  Alteryx.Gui.BeforeLoad = function (manager, AlteryxDataItems, json) {
+    // Radio Group
+    // -----------
+    var stringSelector = new AlteryxDataItems.StringSelector('event_type', {
+      optionList: [
+        { label: 'XMSG("Folder")', value: "event_folder" },
+        { label: 'XMSG("File")', value: "event_file" },
+      ]
+    })
+    manager.addDataItem(stringSelector)
+    manager.bindDataItemToWidget(stringSelector, 'EventType') // Bind to widget
+    window.Alteryx.Gui.Manager.getDataItem('event_type').setValue('event_folder')
+
+    // Create constrained float item
+    var constrainedNumberDataItem = new AlteryxDataItems.ConstrainedFloat('timeout', {
+      max: 600,
+      min: 5,
+      step: 5.0
+    })
+    manager.addDataItem(constrainedNumberDataItem)
+    // Bind to NumericSpinner widget
+    manager.bindDataItemToWidget(constrainedNumberDataItem, 'Timeout')
+    window.Alteryx.Gui.Manager.getDataItem('timeout').setValue(60)
+  }
+
+  Alteryx.Gui.AfterLoad = (manager, AlteryxDataItems) => {
+    hide_options()
+    manager.getDataItem('event_type').registerPropertyListener('value', hide_options)
+  }
+</script>
+
+</html>

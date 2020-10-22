@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<AlteryxJavaScriptPlugin>
+  <EngineSettings EngineDll="Python" EngineDllEntryPoint="EventTriggerEngine.py" SDKVersion="10.1" />
+  <GuiSettings Html="EventTriggerGUI.html" Icon="EventTriggerIcon.png" Help="https://github.com/bobpeers/Alteryx_SDK_EventTrigger" SDKVersion="10.1">
+    <InputConnections>
+      <Connection Name="Input" AllowMultiple="False" Optional="False" Type="Connection" Label=""/>
+    </InputConnections>
+    <OutputConnections>
+      <Connection Name="Output" AllowMultiple="False" Optional="False" Type="Connection" Label="O"/>
+      <Connection Name="Error" AllowMultiple="False" Optional="False" Type="Connection" Label="E"/>
+    </OutputConnections>
+  </GuiSettings>
+  <Properties>
+    <MetaInfo>
+      <Name>Event Trigger</Name>
+      <Description>Wait for a file system event before continuing</Description>
+      <CategoryName>File System</CategoryName>
+      <SearchTags>file, folder, create, delete, rename, modify</SearchTags>
+      <ToolVersion>1.0</ToolVersion>
+      <Author>Bob Peers</Author>
+      <Company></Company>
+      <Copyright>2020</Copyright>
+    </MetaInfo>
+  </Properties>
+</AlteryxJavaScriptPlugin>
