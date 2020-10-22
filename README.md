@@ -13,6 +13,8 @@ Download the yxi file and double click to install in Alteyrx.
 
 The tool will be installed in the __Filesystem__ category.
 
+<img src="https://github.com/bobpeers/Alteryx_SDK_Event_Trigger/blob/main/images/EventTrigger_toolbar.png" width="400" alt="Event Trigger Install Toolbar">
+
 ## Requirements
 
 None, uses standard Python libraries.
